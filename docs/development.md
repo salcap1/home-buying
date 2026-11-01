@@ -34,7 +34,7 @@ App code is TypeScript (`app/page.tsx`, `lib/*.ts`). Shared domain types live in
 | `lib/brand/` | Company themes. `NEXT_PUBLIC_BRAND` selects one. |
 | `lib/data/` | Database SDK (`getStore(boardId)`). Neon SQL lives in `lib/data/neon`. |
 | `lib/tenancy/` | `boardContext` / `resolveBoard` from the session cookie. |
-| `lib/auth/` | Board cookie for the open search. Not a password and not per-agent login. |
+| `lib/auth/` | Password hashing (scrypt) + HMAC session cookies. One password = one board. |
 | `lib/layers/` | School districts, counties, polygon helpers, basemap tiles. |
 | `lib/modules/` | Optional product slices from env or the brand theme. |
 | `lib/providers/` | Not created yet. Listing ingest is `lib/listing.ts` and `lib/redfin-csv.ts`. |
