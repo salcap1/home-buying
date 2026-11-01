@@ -12,3 +12,9 @@
 ## Notes
 
 -
+
+<!--
+PR title must be a Conventional Commit (squash merge uses it as the commit message):
+  feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert: description
+See CONTRIBUTING.md.
+-->

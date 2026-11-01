@@ -17,6 +17,7 @@
     "test:coverage": "vitest run --coverage",
     "coverage:badge": "node .github/scripts/coverage-badge.mjs",
     "typecheck": "tsc --noEmit",
+    "commitlint": "commitlint --edit",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -39,6 +40,8 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
     "@eslint/eslintrc": "^3.3.7",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/leaflet": "^1.9.22",

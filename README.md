@@ -97,6 +97,10 @@ Live assumptions, listings, and password hashes stay in your Neon project. Accou
 - [docs/flows.md](docs/flows.md) — how listings, maps, and money move
 - [docs/development.md](docs/development.md) — commands and conventions
 
+## Contributing
+
+Commits and PR titles use [Conventional Commits](https://www.conventionalcommits.org/) (`commitlint` + CI). See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## License
 
 [MIT](LICENSE)
