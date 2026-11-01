@@ -12,8 +12,8 @@ What we have set up so this can become a hosted product. Product shape: [archite
 
 ## In progress
 
-- **Search tabs** — `home_buying.boards` plus `board_id` on houses, assumptions, and dismissed. Zones and counties are per tab. See [codebase.md](codebase.md). No `organizations` table yet.
-- **Gate** — no password. The open search is the `board_id` cookie, not an agent account.
+- **Boards** — `home_buying.boards` plus `board_id` on houses, assumptions, and dismissed. Zones and counties are per board. See [codebase.md](codebase.md). No `organizations` table yet.
+- **Gate** — password-only accounts. One password unlocks one board (`access_keys` + HMAC session cookie via `SESSION_SECRET`). Locked visitors still see the empty board shell. Not agent/org SSO yet.
 - **shadcn/ui** — primitives in `components/ui/`. `app/page.tsx` already uses some of them. Do not restyle the whole screen to match the kit.
 
 ## Not yet (wait for a defined product)
