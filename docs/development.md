@@ -31,7 +31,7 @@ App code is TypeScript (`app/page.tsx`, `lib/*.ts`). Shared domain types live in
 |---|---|
 | `app/` | Board UI (`page.tsx`, map components) and thin API routes. |
 | `lib/` | Domain code. Start with `lib/types.ts` and `lib/calc.ts`. |
-| `lib/brand/` | Company themes. `NEXT_PUBLIC_BRAND` selects one. |
+| `lib/brand/` | Company themes (default theme in use). |
 | `lib/data/` | Database SDK (`getStore(boardId)`). Neon SQL lives in `lib/data/neon`. |
 | `lib/tenancy/` | `boardContext` / `resolveBoard` from the session cookie. |
 | `lib/auth/` | Password hashing (scrypt) + HMAC session cookies. One password = one board. |

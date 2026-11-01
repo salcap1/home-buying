@@ -14,7 +14,7 @@ export function listBrands() {
   return Object.keys(themes);
 }
 
-export function getBrand(id = process.env.NEXT_PUBLIC_BRAND): BrandTheme {
+export function getBrand(id = "default"): BrandTheme {
   const key = String(id || "default").toLowerCase();
   return themes[key] || defaultTheme;
 }

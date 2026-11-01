@@ -41,7 +41,7 @@ Do not add a second global `WHERE id = 1` path. New buyer data takes `board_id` 
 | Money, payment, sell-to-buy | `lib/calc.ts` | Named household constants |
 | Domain shapes | `lib/types.ts` | Ad-hoc types in `page.tsx` |
 | Module on/off | `lib/modules/catalog.ts`, `NEXT_PUBLIC_MODULES` or the brand theme | `if (org === "32south")` |
-| Look and copy | `lib/brand/themes/*` + `NEXT_PUBLIC_BRAND` | Colors and company names in `page.tsx` |
+| Look and copy | `lib/brand/themes/*` (default theme) | Colors and company names in `page.tsx` |
 | Screen behavior | `app/page.tsx` (the board UI) | A second app shell |
 | Map drawing | `app/OverviewMap.tsx`, `app/ListingMap.tsx` — they render `{ geoid, label, color, geometry }` and pins | County URLs inside the component |
 | School districts | `lib/layers/school-districts.ts` | A new GIS URL in the map component |
@@ -62,7 +62,7 @@ District and county geometry is shared across boards. The per-board choice is wh
 
 Each account has a unique password (`access_keys.password_hash`) and exactly one board. `POST /api/session` with `mode: "sign_in" | "create"` unlocks or creates that board. Locked visitors still see the empty board UI. Share links are still future; see architecture phase 4.
 
-Cron routes (`/api/houses/refresh` and similar) expect `CRON_SECRET`.
+Listing refresh (`/api/houses/refresh`) requires a signed-in board session.
 
 ## Board config (not code)
 

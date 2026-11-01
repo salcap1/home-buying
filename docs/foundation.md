@@ -6,7 +6,7 @@ What we have set up so this can become a hosted product. Product shape: [archite
 
 1. **Repo tooling** — TypeScript, ESLint, Prettier, Vitest, Husky, CI, `.env.example`, Node 22.
 2. **Lucide** — UI icons (`Heart`, `ExternalLink`, `X`, sort chevrons, school pin). Do not add more inline SVGs for chrome.
-3. **Brand tokens** — `lib/brand`. A company is a theme file + `NEXT_PUBLIC_BRAND`. CSS variables on `<html>` (`--paper`, `--a`, `--font-body`, …). Example tenant theme: `south32`. No org table yet.
+3. **Brand tokens** — `lib/brand`. Default theme drives CSS variables on `<html>` (`--paper`, `--a`, `--font-body`, …). Extra theme files can live in the catalog for later org wiring. No org table yet.
 4. **Data SDK** — `getStore()` in `lib/data`. Routes do not run Neon SQL. Errors are `DataError`. `DATABASE_PROVIDER=neon`. Supabase is a documented empty adapter, not a migration.
 5. **UI system (decision)** — **shadcn/ui + Tailwind + Radix**, themed by `lib/brand`. **Vitest**, not Jest. Not installed yet except Vitest. Do not rewrite `page.tsx` or `globals.css` to get there.
 
@@ -41,7 +41,7 @@ We are not adopting a themed kit (MUI, Chakra, Mantine, Ant). Those ship their o
 
 1. Copy `lib/brand/themes/default.ts`.
 2. Register it in `lib/brand/index.ts`.
-3. `NEXT_PUBLIC_BRAND=<id>`.
+3. Wire host → theme later via org data (not an env switch).
 
 ## How to add a database provider
 

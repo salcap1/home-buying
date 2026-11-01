@@ -18,7 +18,6 @@ vi.mock("@/lib/env", () => ({
   env: {
     SESSION_SECRET: "test-session-secret",
     DEMO_ORG_ID: "demo",
-    DEMO_BOARD_ID: "demo",
     DATABASE_PROVIDER: "neon",
   },
 }));

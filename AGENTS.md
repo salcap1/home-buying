@@ -23,8 +23,8 @@ It is **not** an IDX search portal, a Zillow clone, or something that mounts ins
 - Next.js App Router (`app/`), React, Leaflet, TypeScript, Lucide
 - New UI: shadcn/ui + Tailwind, themed by `lib/brand`. Do not add MUI/Chakra. Do not rewrite `page.tsx` to adopt it.
 - Neon behind `getStore()` in `lib/data`. Do not add SQL in routes. Do not implement Supabase unless a paying customer needs Auth + RLS and the user asks.
-- Branding is `lib/brand` + `NEXT_PUBLIC_BRAND`. Do not hardcode a company look in `page.tsx`.
-- Vercel (`vercel.json` crons). You own this project; customers CNAME to it.
+- Branding is `lib/brand` (default theme). Do not hardcode a company look in `page.tsx`.
+- Vercel + Neon hosting. You own this project; customers CNAME to it.
 
 `npm run dev` / `npm run lint` / `npm run typecheck` / `npm test` / `npm run build`. Env: copy `.env.example` to `.env.local`. Node 22 (`.nvmrc`). New files are `.ts` / `.tsx`. Shared types: `lib/types.ts`. Platform folders: `lib/brand`, `lib/data`, `lib/tenancy`, `lib/auth`, `lib/providers`, `lib/layers`, `db/migrations`. Do not mass-run Prettier on the current app. Do not strip `// @ts-nocheck` from the demo UI as busywork.
 
