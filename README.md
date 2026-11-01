@@ -98,6 +98,10 @@ Live assumptions, listings, and password hashes stay in your Neon project. Accou
 
 Commits and PR titles use [Conventional Commits](https://www.conventionalcommits.org/) (`commitlint` + CI). See [CONTRIBUTING.md](CONTRIBUTING.md).
 
+## Security
+
+See [SECURITY.md](SECURITY.md) for how to report vulnerabilities.
+
 ## License
 
 [MIT](LICENSE)
