@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test:coverage
+      - name: Coverage summary
+        if: always()
+        run: |
+          if [ ! -f coverage/coverage-summary.json ]; then
+            echo "No coverage summary" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          node <<'NODE' >> "$GITHUB_STEP_SUMMARY"
+          const summary = require("./coverage/coverage-summary.json").total;
+          const row = (label, key) =>
+            `| ${label} | ${summary[key].pct.toFixed(1)}% | ${summary[key].covered}/${summary[key].total} |`;
+          console.log("### Coverage (`lib/`)");
+          console.log("");
+          console.log("| Metric | % | Covered |");
+          console.log("| --- | --- | --- |");
+          console.log(row("Statements", "statements"));
+          console.log(row("Branches", "branches"));
+          console.log(row("Functions", "functions"));
+          console.log(row("Lines", "lines"));
+          NODE
+          npm run coverage:badge
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          if-no-files-found: ignore
+      - run: npm run build
+        env:
+          DATABASE_URL: postgres://ci:ci@127.0.0.1/ci

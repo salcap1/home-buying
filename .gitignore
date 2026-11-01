@@ -1,0 +1,40 @@
+# Dependencies / build
+node_modules
+.next
+out
+coverage
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Secrets and local env (keep .env.example)
+.env
+.env.*
+!.env.example
+
+# Hosting / tooling
+.vercel
+.neon
+
+# Cursor / local agent config (rules, skills)
+.cursor/
+
+# Local-only notes (never publish)
+docs/private/
+
+# Logs and OS
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Local dumps and personal exports (never commit live board data)
+*.dump
+*.sql.gz
+data/private/
+tmp/
+.local/
+
+# Editor
+.idea
+*.swp
+*.swo
