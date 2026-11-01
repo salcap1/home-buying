@@ -15,11 +15,10 @@ tsconfig.tsbuildinfo
 .vercel
 .neon
 
-# Cursor / local agent config (rules, skills, private advisor notes)
+# Cursor / local agent config (rules, skills)
 .cursor/
 
-# Private business / deal notes (keep locally; do not publish)
-docs/broker-discussions.md
+# Local-only notes (never publish)
 docs/private/
 
 # Logs and OS

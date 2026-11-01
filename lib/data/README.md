@@ -1,15 +1,10 @@
-# Data SDK
+# Data
 
-Routes and jobs talk to `getStore()`, not Neon SQL.
+All database access goes through `getStore(boardId)` / `catalogStore()`.
 
-```
-getStore()
-  .houses | .assumptions | .dismissed | .ratings
-```
+- `lib/data/neon/` — current adapter (tagged SQL)
+- `lib/data/empty.ts` — locked/empty store for signed-out visitors
+- `lib/data/mappers.ts` — row → domain types
+- `lib/data/supabase/` — placeholder only; implement only if Auth + RLS is explicitly required later
 
-- `lib/data/store.ts` — provider-agnostic interface
-- `lib/data/neon/` — current Postgres implementation
-- `lib/data/supabase/` — placeholder only; do not implement until a paying customer needs Auth + RLS
-- `lib/data/errors.ts` — `DataError` + `dataErrorResponse`
-
-Set `DATABASE_PROVIDER=neon` (default). Switching later means a new adapter that implements `DataStore`, not new queries in `app/api`.
+Routes must not import `@neondatabase/serverless` or run SQL.

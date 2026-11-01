@@ -1,5 +1,5 @@
-# `lib/auth`
+# Auth
 
-Account unlock is a unique password per access key (`access_keys.password_hash`), bound to one board. Visitors can create a password-only account from the UI. Session cookies are signed with `SESSION_SECRET`.
+Password-only board unlock and session cookies live here (`password.ts`, `session.ts`).
 
-Later agent/broker accounts and client `share_token` links also belong here. Stay on Neon; do not add Supabase Auth unless a paying customer needs it and we decide to migrate.
+Later agent accounts and client `share_token` links also belong here. Stay on Neon; add another auth stack only if Auth + RLS is explicitly required later.

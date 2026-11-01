@@ -3,7 +3,7 @@ import { brandCssVars, getBrand, listBrands } from "@/lib/brand";
 describe("brand", () => {
   it("falls back to the default theme", () => {
     expect(getBrand("unknown").id).toBe("default");
-    expect(listBrands()).toEqual(expect.arrayContaining(["default", "south32"]));
+    expect(listBrands()).toEqual(["default"]);
   });
 
   it("maps theme colors onto existing CSS variables", () => {

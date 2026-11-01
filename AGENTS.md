@@ -1,6 +1,6 @@
 # AGENTS.md
 
-Multi-tenant **buyer board** product: shortlists with payments, commute, schools, and map context. Build as if a thousand brokerages will share this repo.
+Multi-tenant **buyer board** product: shortlists with payments, commute, schools, and map context. Build as if many organizations will share this repo.
 
 ## Read first
 
@@ -14,7 +14,7 @@ Local Cursor rules/skills live under `.cursor/` (gitignored). `docs/codebase.md`
 
 ## What this product is
 
-A shortlist counseling tool that can grow into a **client-facing buyer platform**. Agents share a private board. Password-only accounts unlock one board each. You host (Vercel + Neon); customers rent a tenant.
+A shortlist counseling tool that can grow into a **client-facing buyer platform**. Agents share a private board. Password-only accounts unlock one board each. One hosted app (Vercel + Neon); orgs are tenants in data.
 
 It is **not** an IDX search portal, a Zillow clone, or something that mounts inside a brokerage IDX map.
 
@@ -22,15 +22,15 @@ It is **not** an IDX search portal, a Zillow clone, or something that mounts ins
 
 - Next.js App Router (`app/`), React, Leaflet, TypeScript, Lucide
 - New UI: shadcn/ui + Tailwind, themed by `lib/brand`. Do not add MUI/Chakra. Do not rewrite `page.tsx` to adopt it.
-- Neon behind `getStore()` in `lib/data`. Do not add SQL in routes. Do not implement Supabase unless a paying customer needs Auth + RLS and the user asks.
+- Neon behind `getStore()` in `lib/data`. Do not add SQL in routes. Do not implement Supabase unless Auth + RLS is explicitly required later.
 - Branding is `lib/brand` (default theme). Do not hardcode a company look in `page.tsx`.
-- Vercel + Neon hosting. You own this project; customers CNAME to it.
+- Vercel + Neon hosting.
 
 `npm run dev` / `npm run lint` / `npm run typecheck` / `npm test` / `npm run build`. Env: copy `.env.example` to `.env.local`. Node 22 (`.nvmrc`). New files are `.ts` / `.tsx`. Shared types: `lib/types.ts`. Platform folders: `lib/brand`, `lib/data`, `lib/tenancy`, `lib/auth`, `lib/providers`, `lib/layers`, `db/migrations`. Do not mass-run Prettier on the current app. Do not strip `// @ts-nocheck` from the demo UI as busywork.
 
 ## How to change things
 
-1. Prefer config and tables over new `if` branches for a person, town, or brokerage.
+1. Prefer config and tables over new `if` branches for a person, town, or org.
 2. New buyer data belongs on an **org → board**. Do not extend singleton `assumptions` rows as the long-term model.
 3. Map overlays go through a layer registry, not another hardcoded GIS URL in a component.
 4. Listing ingest goes through a provider shape (`url` / `csv` / later `mls`). Do not couple UI to Redfin HTML.

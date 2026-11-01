@@ -1,13 +1,11 @@
 import type { BrandTheme } from "./theme";
 import { defaultTheme } from "./themes/default";
-import { south32Theme } from "./themes/south32";
 
 export type { BrandColors, BrandFonts, BrandRadius, BrandSpace, BrandTheme, BrandType } from "./theme";
 export { defaultScale } from "./theme";
 
 const themes: Record<string, BrandTheme> = {
   default: defaultTheme,
-  south32: south32Theme,
 };
 
 export function listBrands() {

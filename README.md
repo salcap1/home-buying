@@ -77,14 +77,14 @@ Start with [`docs/codebase.md`](docs/codebase.md) and [`docs/architecture.md`](d
 
 **In git**
 
-- Application code, migrations (schema only — no household dollar seeds), public docs, `.env.example`
+- Application code, migrations (schema only — no live board seeds), public docs, `.env.example`
 
 **Not in git** (see `.gitignore`)
 
 - `.env.local` and other env files with secrets
 - `.cursor/` (local agent rules/skills)
-- `docs/broker-discussions.md` and `docs/private/` (deal notes)
-- `.vercel` / `.neon`, SQL dumps, live board data
+- `docs/private/`, SQL dumps, live board data
+- `.vercel` / `.neon`
 
 Live assumptions, listings, and password hashes stay in your Neon project. Account passwords are scrypt hashes on `home_buying.access_keys`.
 

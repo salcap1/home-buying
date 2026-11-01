@@ -42,7 +42,7 @@ App code is TypeScript (`app/page.tsx`, `lib/*.ts`). Shared domain types live in
 | `db/migrations/` | Neon SQL. Boards are search tabs (`001`, `002`), not org tables yet. |
 | `tests/` | Vitest (`tests/**/*.test.ts`). |
 | `data/` | Static geo (Union high schools). New overlays go through `lib/layers`. |
-| `docs/` | Architecture (target), codebase map and flows (today), broker, this file. |
+| `docs/` | Architecture (target), codebase map and flows (today), this file. |
 | `AGENTS.md` | Contributor / agent conventions. Local Cursor rules live in gitignored `.cursor/`. |
 
 ## Rules of the road
@@ -53,7 +53,7 @@ App code is TypeScript (`app/page.tsx`, `lib/*.ts`). Shared domain types live in
 - New UI is **shadcn/ui + Tailwind + Lucide**, tokens from `lib/brand`. Do not add MUI/Chakra/Mantine. Do not rewrite `page.tsx` or `globals.css` in one pass.
 - Icons come from `lucide-react`.
 - Tests are Vitest.
-- Do not rewrite `page.tsx` to “look like a SaaS” without a deal shape.
+- Do not rewrite `page.tsx` into a marketing shell without a clear product scope.
 - New files are TypeScript. Do not add `.js` sources.
 - Format and lint **new** files. Do not prettier-bomb the demo UI unless asked. Do not strip `// @ts-nocheck` from `page.tsx` as busywork.
 - Env names belong in `.env.example`. Never commit `.env.local`.

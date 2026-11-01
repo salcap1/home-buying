@@ -40,7 +40,7 @@ Do not add a second global `WHERE id = 1` path. New buyer data takes `board_id` 
 | HTTP shape | `app/api/<name>/route.ts` — `export const dynamic = "force-dynamic"`, `boardContext(request)`, `dataErrorResponse` | Neon SQL |
 | Money, payment, sell-to-buy | `lib/calc.ts` | Named household constants |
 | Domain shapes | `lib/types.ts` | Ad-hoc types in `page.tsx` |
-| Module on/off | `lib/modules/catalog.ts`, `NEXT_PUBLIC_MODULES` or the brand theme | `if (org === "32south")` |
+| Module on/off | `lib/modules/catalog.ts`, `NEXT_PUBLIC_MODULES` or the brand theme | `if (org === "acme")` |
 | Look and copy | `lib/brand/themes/*` (default theme) | Colors and company names in `page.tsx` |
 | Screen behavior | `app/page.tsx` (the board UI) | A second app shell |
 | Map drawing | `app/OverviewMap.tsx`, `app/ListingMap.tsx` — they render `{ geoid, label, color, geometry }` and pins | County URLs inside the component |
