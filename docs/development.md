@@ -40,7 +40,6 @@ App code is TypeScript (`app/page.tsx`, `lib/*.ts`). Shared domain types live in
 | `lib/providers/` | Not created yet. Listing ingest is `lib/listing.ts` and `lib/redfin-csv.ts`. |
 | `components/ui/` | shadcn/ui primitives. Theme from `lib/brand`. |
 | `db/migrations/` | Neon SQL. Boards are search tabs (`001`, `002`), not org tables yet. |
-| `scripts/` | One-off jobs. |
 | `tests/` | Vitest (`tests/**/*.test.ts`). |
 | `data/` | Static geo (Union high schools). New overlays go through `lib/layers`. |
 | `docs/` | Architecture (target), codebase map and flows (today), broker, this file. |

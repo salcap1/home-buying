@@ -10,7 +10,7 @@ import {
   sessionCookieHeader,
 } from "@/lib/auth/session";
 import { hashPassword } from "@/lib/auth/password";
-import { getStore } from "@/lib/data";
+import { catalogStore, getStore } from "@/lib/data";
 import { boardContext } from "@/lib/tenancy";
 
 export const dynamic = "force-dynamic";
@@ -21,10 +21,6 @@ function jsonWithCookies(body: unknown, cookies: string[]) {
   const headers = new Headers({ "content-type": "application/json" });
   for (const cookie of cookies) headers.append("set-cookie", cookie);
   return new Response(JSON.stringify(body), { headers });
-}
-
-function catalog() {
-  return getStore("charlotte");
 }
 
 function sessionPayload(accessKeyId: string, board: { id: string; name?: string }) {
@@ -39,7 +35,7 @@ export async function GET(request: Request) {
   if (board.locked || !board.accessKeyId) {
     return Response.json({ unlocked: false, board: null, boards: [], boardId: "" });
   }
-  const boards = await catalog().boards.listByAccessKey(board.accessKeyId);
+  const boards = await catalogStore().boards.listByAccessKey(board.accessKeyId);
   const active = boards[0];
   if (!active) {
     return Response.json({ unlocked: false, board: null, boards: [], boardId: "" });
@@ -62,7 +58,7 @@ export async function POST(request: Request) {
     return Response.json({ error: `Use at least ${MIN_PASSWORD} characters` }, { status: 400 });
   }
 
-  const existing = await catalog().boards.unlockByPassword(password);
+  const existing = await catalogStore().boards.unlockByPassword(password);
   if (mode === "sign_in") {
     const board = existing?.boards[0];
     if (!existing || !board) {
@@ -75,7 +71,7 @@ export async function POST(request: Request) {
     return Response.json({ error: "That password is already in use — sign in instead" }, { status: 409 });
   }
 
-  const created = await catalog().boards.createWorkspace(hashPassword(password));
+  const created = await catalogStore().boards.createWorkspace(hashPassword(password));
   const board = created.boards[0];
   if (!board) {
     return Response.json({ error: "Could not create workspace" }, { status: 500 });
@@ -91,7 +87,7 @@ export async function PATCH(request: Request) {
     return Response.json({ error: "Unlock required" }, { status: 401 });
   }
 
-  const boards = await catalog().boards.listByAccessKey(accessKeyId);
+  const boards = await catalogStore().boards.listByAccessKey(accessKeyId);
   const board = boards[0];
   if (!board) return Response.json({ error: "Unknown search" }, { status: 404 });
 
@@ -99,7 +95,7 @@ export async function PATCH(request: Request) {
     const name = body.name.trim().slice(0, 80);
     if (!name) return Response.json({ error: "Name required" }, { status: 400 });
     await getStore(board.id).boards.rename(board.id, name);
-    const renamed = (await catalog().boards.listByAccessKey(accessKeyId))[0];
+    const renamed = (await catalogStore().boards.listByAccessKey(accessKeyId))[0];
     if (!renamed) return Response.json({ error: "Unknown search" }, { status: 404 });
     return sessionPayload(accessKeyId, renamed);
   }

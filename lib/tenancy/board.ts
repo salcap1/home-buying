@@ -1,5 +1,5 @@
 import { createEmptyStore } from "@/lib/data/empty";
-import { getStore } from "@/lib/data";
+import { catalogStore, getStore } from "@/lib/data";
 import type { DataStore, SearchTab } from "@/lib/data";
 import { ACCESS_COOKIE, hasSession, readCookie } from "@/lib/auth/session";
 import { env } from "@/lib/env";
@@ -50,17 +50,12 @@ function fromBoard(tab: SearchTab, accessKeyId: string): BoardContext {
   };
 }
 
-/** Catalog store used only for board lookup (not buyer rows). */
-function catalog() {
-  return getStore("charlotte");
-}
-
 export async function resolveBoard(request?: Request): Promise<BoardContext> {
   const accessKeyId = readCookie(request, ACCESS_COOKIE);
   if (!accessKeyId || !hasSession(request, accessKeyId)) {
     return lockedStub;
   }
-  const boards = await catalog().boards.listByAccessKey(accessKeyId);
+  const boards = await catalogStore().boards.listByAccessKey(accessKeyId);
   const board = boards[0];
   if (!board) return lockedStub;
   return fromBoard(board, accessKeyId);

@@ -91,7 +91,9 @@ export function skipReasonsForHouse(
 ) {
   const next = {
     ...house,
-    downDollars: house.downDollars ?? defaultDown(house.price || 0, assumptions as Assumptions, house.updateCash || 0),
+    downDollars:
+      house.downDollars ??
+      (assumptions ? defaultDown(house.price || 0, assumptions, house.updateCash || 0) : 0),
   };
   const analysis = assumptions ? analyzeHouse(next as House, assumptions) : null;
   return skipReasons({
