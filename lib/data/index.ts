@@ -13,7 +13,7 @@ const cached = new Map<string, DataStore>();
 /** Board id used only for catalog lookups (boards / access keys), never for buyer rows. */
 export const CATALOG_BOARD_ID = "_catalog";
 
-export function getStore(boardId = env.DEMO_BOARD_ID || "demo"): DataStore {
+export function getStore(boardId = CATALOG_BOARD_ID): DataStore {
   const existing = cached.get(boardId);
   if (existing) return existing;
   const provider = env.DATABASE_PROVIDER;

@@ -1,7 +1,7 @@
 import { MODULE_IDS } from "../../modules";
 import { defaultScale, type BrandTheme } from "../theme";
 
-/** Example tenant theme. Switch with NEXT_PUBLIC_BRAND=south32. Not a live 32 South deploy. */
+/** Example tenant theme for the brand catalog. Not a live deploy. */
 export const south32Theme: BrandTheme = {
   id: "south32",
   name: "32 South",

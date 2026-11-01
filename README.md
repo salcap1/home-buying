@@ -36,9 +36,6 @@ Copy [`.env.example`](.env.example). Never commit `.env.local` or real Neon cred
 | `DATABASE_URL` / `HOME_BUYING_STORAGE_DATABASE_URL` | Neon connection string |
 | `DATABASE_PROVIDER` | `neon` (default) |
 | `SESSION_SECRET` | Signs unlock cookies (required for auth) |
-| `CRON_SECRET` | Bearer token for listing refresh cron |
-| `DEMO_BOARD_ID` | Cron / default board id when no session |
-| `NEXT_PUBLIC_BRAND` | Theme id (`default`, `south32`, …) |
 
 Apply SQL under [`db/migrations/`](db/migrations/) to your Neon database before first run of new features.
 

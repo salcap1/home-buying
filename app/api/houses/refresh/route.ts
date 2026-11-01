@@ -1,30 +1,23 @@
 import { defaultDown } from "@/lib/calc";
-import { dataErrorResponse, getStore } from "@/lib/data";
-import { env } from "@/lib/env";
+import { dataErrorResponse } from "@/lib/data";
 import { boardContext } from "@/lib/tenancy";
 import { refreshRedfinListing } from "@/lib/listing";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
-function authorized(request: Request) {
-  const secret = process.env.CRON_SECRET || env.CRON_SECRET || "";
-  if (!secret) return false;
-  return request.headers.get("authorization") === `Bearer ${secret}`;
-}
-
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+/** Refresh listing prices for the signed-in board (no cron / shared secret). */
 export async function GET(request: Request) {
-  if (!authorized(request)) {
-    return new Response("Unauthorized", { status: 401 });
-  }
-
   try {
-    const { board, store: sessionStore } = await boardContext(request);
-    const store = board.locked ? getStore(env.DEMO_BOARD_ID) : sessionStore;
+    const { board, store } = await boardContext(request);
+    if (board.locked || !board.id) {
+      return new Response("Unlock required", { status: 401 });
+    }
+
     const assumptions = await store.assumptions.get();
     const houses = await store.houses.listRefreshTargets();
 
@@ -68,13 +61,14 @@ export async function GET(request: Request) {
         );
         if (priceChanged && row) updated.push(row);
         else skipped += 1;
-      } catch (error: any) {
+      } catch (error: unknown) {
         failed += 1;
         console.error(`Redfin refresh failed for ${house.name}:`, error);
       }
     }
 
     console.log("Redfin listing refresh", {
+      boardId: board.id,
       checked: houses.length,
       updated: updated.length,
       removed: removed.length,

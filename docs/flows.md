@@ -43,7 +43,7 @@ These start when the overview is open. Each loops while `remaining` is non-zero.
 
 Opening one house calls `POST /api/schools` when names or ratings are missing. That route decorates schools already on the house, otherwise `pullListing`, otherwise `findSchools`. Ratings are cached on the store (`store.ratings`), shared across boards.
 
-`GET /api/houses/refresh` is the daily cron (`vercel.json`, noon UTC). It requires `Authorization: Bearer $CRON_SECRET`. With no session it uses the `charlotte` store. `refreshRedfinListing` updates price or removes an unavailable listing. It is not the paste path.
+`GET /api/houses/refresh` refreshes listing prices for the **signed-in** board. `refreshRedfinListing` updates price or removes an unavailable listing. It is not the paste path and is not a scheduled cron.
 
 ## Map and commute
 
