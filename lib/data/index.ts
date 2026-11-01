@@ -10,7 +10,10 @@ export type { DataStore, DismissedKey, HouseSummary, SchoolRating, SearchTab } f
 
 const cached = new Map<string, DataStore>();
 
-export function getStore(boardId = "charlotte"): DataStore {
+/** Board id used only for catalog lookups (boards / access keys), never for buyer rows. */
+export const CATALOG_BOARD_ID = "_catalog";
+
+export function getStore(boardId = env.DEMO_BOARD_ID || "demo"): DataStore {
   const existing = cached.get(boardId);
   if (existing) return existing;
   const provider = env.DATABASE_PROVIDER;
@@ -23,4 +26,9 @@ export function getStore(boardId = "charlotte"): DataStore {
     `Unknown DATABASE_PROVIDER "${provider}". Add an adapter under lib/data/${provider}/ and register it here.`,
     "UNAVAILABLE"
   );
+}
+
+/** Shared store for board/access-key queries that are not scoped to a buyer board. */
+export function catalogStore(): DataStore {
+  return getStore(CATALOG_BOARD_ID);
 }

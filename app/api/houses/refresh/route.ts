@@ -1,5 +1,6 @@
 import { defaultDown } from "@/lib/calc";
 import { dataErrorResponse, getStore } from "@/lib/data";
+import { env } from "@/lib/env";
 import { boardContext } from "@/lib/tenancy";
 import { refreshRedfinListing } from "@/lib/listing";
 
@@ -7,7 +8,7 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
 function authorized(request: Request) {
-  const secret = process.env.CRON_SECRET || "";
+  const secret = process.env.CRON_SECRET || env.CRON_SECRET || "";
   if (!secret) return false;
   return request.headers.get("authorization") === `Bearer ${secret}`;
 }
@@ -23,7 +24,7 @@ export async function GET(request: Request) {
 
   try {
     const { board, store: sessionStore } = await boardContext(request);
-    const store = board.locked ? getStore("charlotte") : sessionStore;
+    const store = board.locked ? getStore(env.DEMO_BOARD_ID) : sessionStore;
     const assumptions = await store.assumptions.get();
     const houses = await store.houses.listRefreshTargets();
 

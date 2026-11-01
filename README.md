@@ -1,5 +1,10 @@
 # Buyer boards
 
+[![CI](https://github.com/salcap1/home-buying/actions/workflows/ci.yml/badge.svg)](https://github.com/salcap1/home-buying/actions/workflows/ci.yml)
+![Coverage](.github/badges/coverage.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+![Node](https://img.shields.io/badge/node-22-brightgreen)
+
 A hosted **buyer board** for real-estate shortlists: payments, commute, schools, and map context. Agents (or households) keep private searches behind a password; visitors can still open the app and see the empty board shell.
 
 This is one Next.js app on Vercel + Neon. Branding and market rules are data — not forks.
@@ -22,12 +27,6 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000). Without signing in you get the empty UI. Sign in or create a workspace with a password.
 
-Optional ops script (attach a password to an existing board):
-
-```bash
-node scripts/set-workspace-password.mjs personal 'your-password' charlotte
-```
-
 ## Environment
 
 Copy [`.env.example`](.env.example). Never commit `.env.local` or real Neon credentials.
@@ -38,21 +37,29 @@ Copy [`.env.example`](.env.example). Never commit `.env.local` or real Neon cred
 | `DATABASE_PROVIDER` | `neon` (default) |
 | `SESSION_SECRET` | Signs unlock cookies (required for auth) |
 | `CRON_SECRET` | Bearer token for listing refresh cron |
+| `DEMO_BOARD_ID` | Cron / default board id when no session |
 | `NEXT_PUBLIC_BRAND` | Theme id (`default`, `south32`, …) |
 
 Apply SQL under [`db/migrations/`](db/migrations/) to your Neon database before first run of new features.
 
-## Scripts
+## Commands
 
 ```bash
 npm run dev
 npm run lint
 npm run typecheck
 npm test
+npm run test:coverage
 npm run build
 ```
 
 Node 22 (see `.nvmrc`).
+
+## Testing
+
+Domain unit tests live under [`tests/`](tests/) and target `lib/` (auth/session, tenancy, payments, filters, data helpers). CI runs `npm run test:coverage`, posts a coverage summary on the job, and uploads the HTML report as an artifact. The coverage badge above is regenerated with `npm run coverage:badge` after a local or CI coverage run — commit the SVG when the percentage moves.
+
+See [`tests/README.md`](tests/README.md). UI (`app/page.tsx`) is intentionally not covered yet.
 
 ## Repo layout
 
@@ -62,7 +69,9 @@ Node 22 (see `.nvmrc`).
 | `lib/data/` | `getStore()` + Neon SQL |
 | `lib/auth/` | Password hashing + session cookies |
 | `lib/brand/` | Themes |
+| `lib/tenancy/` | Board session → store |
 | `db/migrations/` | Schema changes |
+| `tests/` | Vitest unit tests |
 | `docs/` | Architecture, flows, development notes |
 
 Start with [`docs/codebase.md`](docs/codebase.md) and [`docs/architecture.md`](docs/architecture.md) if you are changing product shape.
@@ -81,8 +90,6 @@ Start with [`docs/codebase.md`](docs/codebase.md) and [`docs/architecture.md`](d
 - `.vercel` / `.neon`, SQL dumps, live board data
 
 Live assumptions, listings, and password hashes stay in your Neon project. Account passwords are scrypt hashes on `home_buying.access_keys`.
-
-Before flipping a GitHub repo to public: confirm `SESSION_SECRET` and DB URLs are only in Vercel/host env, run `git status` for untracked secrets, and remember old commits may still contain prior hardcodes unless you rewrite history.
 
 ## Product docs
 

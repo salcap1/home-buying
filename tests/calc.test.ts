@@ -1,4 +1,4 @@
-import { analyzeHouse, defaultDown, expenseTotal, pmt, saleFigures } from "@/lib/calc";
+import { analyzeHouse, defaultDown, expenseTotal, keepCashAmount, pmt, saleFigures } from "@/lib/calc";
 import type { Assumptions, House } from "@/lib/types";
 import { EMPTY_FACTS, EMPTY_SCHOOLS } from "@/lib/types";
 
@@ -138,5 +138,13 @@ describe("analyzeHouse", () => {
 describe("defaultDown", () => {
   it("caps the down payment at the list price", () => {
     expect(defaultDown(1, assumptions, 0)).toBe(1);
+  });
+});
+
+describe("keepCashAmount", () => {
+  it("reads keep-cash from assumptions", () => {
+    expect(keepCashAmount(assumptions)).toBe(50000);
+    expect(keepCashAmount({ keepCash: null as unknown as number })).toBe(0);
+    expect(keepCashAmount(null)).toBe(0);
   });
 });
