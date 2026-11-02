@@ -96,11 +96,11 @@ Live assumptions, listings, and password hashes stay in your Neon project. Accou
 
 ## Contributing
 
-Commits and PR titles use [Conventional Commits](https://www.conventionalcommits.org/) (`commitlint` + CI). See [CONTRIBUTING.md](CONTRIBUTING.md).
+Commits and PR titles use [Conventional Commits](https://www.conventionalcommits.org/) (`commitlint` + CI). See [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Security
 
-See [SECURITY.md](SECURITY.md) for how to report vulnerabilities.
+See [SECURITY.md](SECURITY.md) for how to report vulnerabilities. Dependabot opens weekly npm and Actions update PRs; enable security updates in the repo’s Dependabot settings if they are off.
 
 ## License
 

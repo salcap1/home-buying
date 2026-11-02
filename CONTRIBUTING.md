@@ -1,5 +1,7 @@
 # Contributing
 
+Please read the [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you agree to uphold it.
+
 ## Commit messages
 
 This repo uses [Conventional Commits](https://www.conventionalcommits.org/). Husky runs `commitlint` on every commit; PR titles must match the same format (enforced in CI) because we squash-merge.
