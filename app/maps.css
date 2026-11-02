@@ -85,6 +85,10 @@ button, input { font: inherit; }
   display: none;
 }
 
+.all-houses-label-short {
+  display: none;
+}
+
 .house-select-trigger {
   min-width: min(220px, 100%);
   max-width: min(420px, 52vw);
@@ -1654,11 +1658,17 @@ footer {
   }
 
   .sticky-inner {
-    flex-direction: column;
-    align-items: stretch;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
     gap: 8px;
-    min-height: 0;
-    padding: 8px 0;
+    min-height: 56px;
+    padding: 6px 0;
+  }
+
+  .brand {
+    flex: 0 0 auto;
+    max-width: 5.75rem;
   }
 
   .brand small {
@@ -1666,14 +1676,20 @@ footer {
   }
 
   .brand strong {
-    font-size: 17px;
-    line-height: 1.2;
+    display: block;
+    font-size: 15px;
+    line-height: 1.15;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .sticky-controls {
     flex-wrap: nowrap;
     justify-content: stretch;
-    width: 100%;
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
   }
 
   .sticky-board-name,
@@ -1689,6 +1705,19 @@ footer {
     min-width: 44px;
     min-height: 44px;
     flex: 0 0 auto;
+  }
+
+  .all-houses-label-full {
+    display: none;
+  }
+
+  .all-houses-label-short {
+    display: inline;
+  }
+
+  .sticky-controls .overview-btn {
+    flex: 0 0 auto;
+    padding-inline: 12px;
   }
 
   .sticky-controls .overview-btn,
@@ -1915,6 +1944,7 @@ footer {
 
   .wide [data-slot="button"],
   .wide button {
+    flex: 1 1 100%;
     min-height: 44px;
   }
 

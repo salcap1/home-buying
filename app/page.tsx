@@ -1626,9 +1626,11 @@ export default function Page() {
               className={`overview-btn${showingOverview ? " active" : ""}`}
               variant={showingOverview ? "secondary" : "outline"}
               type="button"
+              aria-label="All houses"
               onClick={() => openHouse(OVERVIEW)}
             >
-              All houses
+              <span className="all-houses-label-full">All houses</span>
+              <span className="all-houses-label-short">All</span>
             </Button>
             <Select
               value={showingOverview ? undefined : activeId}
@@ -1712,6 +1714,16 @@ export default function Page() {
                 />
               </div>
             ) : null}
+            <Button
+              variant="outline"
+              type="button"
+              onClick={() => {
+                openHouse(OVERVIEW);
+                setBoardMenuOpen(false);
+              }}
+            >
+              All houses
+            </Button>
             <Button
               variant="outline"
               type="button"
