@@ -77,8 +77,18 @@ button, input { font: inherit; }
 .sticky-more-desktop {
   display: inline-flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-wrap: nowrap;
+  gap: 4px;
+}
+
+.sticky-tool-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid color-mix(in oklab, var(--line) 85%, transparent);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--card) 70%, transparent);
 }
 
 .sticky-menu-btn {
@@ -92,6 +102,34 @@ button, input { font: inherit; }
 .house-select-trigger {
   min-width: min(220px, 100%);
   max-width: min(420px, 52vw);
+}
+
+.sticky-icon-action {
+  gap: 6px;
+  color: var(--muted);
+}
+
+.sticky-icon-action:hover {
+  color: var(--ink);
+  background: color-mix(in oklab, var(--paper-deep) 70%, transparent);
+}
+
+.sticky-back {
+  gap: 2px;
+  padding-inline: 8px 12px;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.sticky-back svg {
+  flex: 0 0 auto;
+  margin-inline: -2px 0;
+}
+
+.sticky-action-label {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 
 .section-copy-mobile {
@@ -178,9 +216,34 @@ button, input { font: inherit; }
 .house-switcher [data-slot="select-trigger"],
 .sticky-controls [data-slot="button"],
 .sticky-controls [data-slot="select-trigger"] {
-  height: 36px;
+  height: 34px;
   border-radius: 999px;
   font-weight: 600;
+}
+
+.sticky-controls .sticky-chip,
+.sticky-controls .house-select-trigger {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--ink);
+  box-shadow: none;
+}
+
+.sticky-controls .sticky-chip:hover,
+.sticky-controls .house-select-trigger:hover {
+  background: color-mix(in oklab, var(--paper-deep) 65%, transparent);
+  border-color: color-mix(in oklab, var(--line) 70%, transparent);
+}
+
+.sticky-controls .overview-btn.active {
+  background: color-mix(in oklab, var(--ink) 92%, #3a342c);
+  border-color: transparent;
+  color: #fff8ee;
+}
+
+.sticky-controls .overview-btn.active:hover {
+  background: var(--ink);
+  color: #fff8ee;
 }
 
 .house-switcher [data-slot="select-trigger"],
@@ -197,8 +260,7 @@ button, input { font: inherit; }
   max-width: min(420px, 52vw);
 }
 
-.house-switcher .overview-btn.active,
-.sticky-controls .overview-btn.active {
+.house-switcher .overview-btn.active {
   background: var(--ink);
   border-color: var(--ink);
   color: #fff8ee;
@@ -206,14 +268,42 @@ button, input { font: inherit; }
 
 .house-switcher .search-tab-name,
 .sticky-controls .search-tab-name {
-  width: 12rem;
-  height: 36px;
+  width: 11rem;
+  height: 34px;
   border-radius: 999px;
+  border: 1px solid var(--line);
   font-weight: 600;
   text-align: center;
-  background: var(--ink);
-  color: #fff8ee;
+  background: color-mix(in oklab, var(--card) 88%, transparent);
+  color: var(--ink);
+}
+
+.sticky-controls .search-tab-name:focus {
+  outline: none;
   border-color: var(--ink);
+  background: var(--card);
+}
+
+.sticky-controls .sticky-icon-action {
+  height: 34px;
+  min-width: 34px;
+  padding-inline: 10px;
+  border-radius: 999px;
+}
+
+.sticky-controls .sticky-tool-group .icon-btn {
+  width: 30px;
+  height: 30px;
+  color: var(--muted);
+}
+
+.sticky-controls .sticky-tool-group .icon-btn:hover {
+  background: color-mix(in oklab, var(--paper-deep) 80%, transparent);
+  color: var(--ink);
+}
+
+.sticky-controls .sticky-tool-group .icon-btn.on {
+  color: var(--heart);
 }
 
 .ghost:hover { background: var(--paper-deep); }
@@ -1643,6 +1733,110 @@ footer {
   }
 }
 
+.boot-screen {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: max(24px, env(safe-area-inset-top, 0px)) 24px max(24px, env(safe-area-inset-bottom, 0px));
+}
+
+.boot-panel {
+  width: min(100%, 22rem);
+  text-align: center;
+  animation: boot-rise 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.boot-kicker {
+  margin: 0 0 8px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 600;
+  animation: boot-fade 700ms ease both;
+}
+
+.boot-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 7vw, 2.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  animation: boot-fade 700ms ease 80ms both;
+}
+
+.boot-track {
+  position: relative;
+  width: min(100%, 11rem);
+  height: 3px;
+  margin: 28px auto 14px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--line) 80%, var(--paper));
+}
+
+.boot-bar {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 42%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--a), var(--b));
+  animation: boot-slide 1.15s cubic-bezier(0.45, 0.05, 0.25, 1) infinite;
+}
+
+.boot-caption {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 500;
+  animation: boot-fade 700ms ease 140ms both;
+}
+
+@keyframes boot-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes boot-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes boot-slide {
+  0% {
+    left: -42%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .boot-panel,
+  .boot-kicker,
+  .boot-title,
+  .boot-caption,
+  .boot-bar {
+    animation: none;
+  }
+
+  .boot-bar {
+    left: 29%;
+    opacity: 0.85;
+  }
+}
+
 @media (max-width: 900px) {
   .compare, .grid-2, .grid-3, .substats, .map-wrap { grid-template-columns: 1fr; }
   .auth-panel-card { padding: 22px 18px 24px; }
@@ -1715,12 +1909,13 @@ footer {
     display: inline;
   }
 
-  .sticky-controls .overview-btn {
+  .sticky-back {
     flex: 0 0 auto;
-    padding-inline: 12px;
+    min-height: 44px;
+    height: 44px;
+    padding-inline: 8px 10px;
   }
 
-  .sticky-controls .overview-btn,
   .sticky-controls [data-slot="button"],
   .sticky-controls [data-slot="select-trigger"],
   .house-select-trigger {

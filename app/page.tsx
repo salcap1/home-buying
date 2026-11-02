@@ -9,7 +9,17 @@ import {
   type HouseAnalysis,
 } from "@/lib/calc";
 import { addressKey, listingLabel, sameAddress, unavailableReason } from "@/lib/redfin-csv";
-import { ChevronDown, ChevronUp, ExternalLink, Heart, MoreHorizontal, X } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronUp,
+  ExternalLink,
+  Heart,
+  LogOut,
+  MoreHorizontal,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import { getBrand } from "@/lib/brand";
 import { money, moneyFine } from "@/lib/format";
 import type {
@@ -192,6 +202,39 @@ function sortValue(
   return null;
 }
 
+function SortButton({
+  label,
+  sortKey,
+  sort,
+  onSort,
+  className = "",
+}: {
+  label: string;
+  sortKey: SortKey;
+  sort: SortState;
+  onSort: (key: SortKey) => void;
+  className?: string;
+}) {
+  const active = sort.key === sortKey;
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      size="xs"
+      className={`sort-btn${active ? " active" : ""}${className ? ` ${className}` : ""}`}
+      title={`Sort by ${label}`}
+      aria-pressed={active}
+      onClick={() => onSort(sortKey)}
+    >
+      {label}
+      <span className={`sort-arrow${active ? ` ${sort.dir}` : ""}`} aria-hidden="true">
+        <ChevronUp className="up" size={10} strokeWidth={2.5} />
+        <ChevronDown className="down" size={10} strokeWidth={2.5} />
+      </span>
+    </Button>
+  );
+}
+
 function SortTh({
   label,
   sortKey,
@@ -206,22 +249,23 @@ function SortTh({
   const active = sort.key === sortKey;
   return (
     <TableHead aria-sort={active ? (sort.dir === "asc" ? "ascending" : "descending") : "none"}>
-      <Button
-        type="button"
-        variant="ghost"
-        size="xs"
-        className={`sort-btn${active ? " active" : ""} -ml-2`}
-        title={`Sort by ${label}`}
-        onClick={() => onSort(sortKey)}
-      >
-        {label}
-        <span className={`sort-arrow${active ? ` ${sort.dir}` : ""}`} aria-hidden="true">
-          <ChevronUp className="up" size={10} strokeWidth={2.5} />
-          <ChevronDown className="down" size={10} strokeWidth={2.5} />
-        </span>
-      </Button>
+      <SortButton label={label} sortKey={sortKey} sort={sort} onSort={onSort} className="-ml-2" />
     </TableHead>
   );
+}
+
+function SortChip({
+  label,
+  sortKey,
+  sort,
+  onSort,
+}: {
+  label: string;
+  sortKey: SortKey;
+  sort: SortState;
+  onSort: (key: SortKey) => void;
+}) {
+  return <SortButton label={label} sortKey={sortKey} sort={sort} onSort={onSort} />;
 }
 
 function paymentPin(housing?: number | null) {
@@ -370,7 +414,7 @@ function IconButton({
     ) : kind === "listing" ? (
       <ExternalLink size={16} strokeWidth={1.75} />
     ) : (
-      <X size={16} strokeWidth={1.75} />
+      <Trash2 size={16} strokeWidth={1.75} />
     );
 
   if (href) {
@@ -1584,8 +1628,15 @@ export default function Page() {
 
   if (!sessionReady || unlocked == null || !assumptions || !sale || (house && !analysis)) {
     return (
-      <main className="wrap hero">
-        <h1>Loading...</h1>
+      <main className="boot-screen" aria-busy="true" aria-live="polite">
+        <div className="boot-panel">
+          <p className="boot-kicker">{brand.tagline}</p>
+          <h1 className="boot-title">{brand.productName}</h1>
+          <div className="boot-track" aria-hidden="true">
+            <span className="boot-bar" />
+          </div>
+          <p className="boot-caption">Opening your board</p>
+        </div>
       </main>
     );
   }
@@ -1622,23 +1673,27 @@ export default function Page() {
                 }}
               />
             ) : null}
-            <Button
-              className={`overview-btn${showingOverview ? " active" : ""}`}
-              variant={showingOverview ? "secondary" : "outline"}
-              type="button"
-              aria-label="All houses"
-              onClick={() => openHouse(OVERVIEW)}
-            >
-              <span className="all-houses-label-full">All houses</span>
-              <span className="all-houses-label-short">All</span>
-            </Button>
+            {!showingOverview ? (
+              <Button
+                className="sticky-back sticky-icon-action"
+                variant="ghost"
+                type="button"
+                aria-label="Back to all houses"
+                title="Back to all houses"
+                onClick={() => openHouse(OVERVIEW)}
+              >
+                <ChevronLeft size={18} strokeWidth={1.75} />
+                <span className="all-houses-label-full">All houses</span>
+                <span className="all-houses-label-short">All</span>
+              </Button>
+            ) : null}
             <Select
               value={showingOverview ? undefined : activeId}
               onValueChange={(value) => {
                 if (value) openHouse(value);
               }}
             >
-              <SelectTrigger className="house-select-trigger" aria-label="Select a house">
+              <SelectTrigger className="house-select-trigger sticky-chip" aria-label="Select a house">
                 <SelectValue placeholder="Choose a house" />
               </SelectTrigger>
               <SelectContent>
@@ -1651,22 +1706,20 @@ export default function Page() {
               </SelectContent>
             </Select>
             <Button
-              className="sticky-add"
-              variant="outline"
+              className="sticky-add sticky-icon-action"
+              variant="ghost"
               type="button"
+              aria-label="Add house"
+              title="Add house"
               onClick={addHouse}
               disabled={!unlocked}
             >
-              + Add
+              <Plus size={18} strokeWidth={1.75} />
+              <span className="sticky-action-label">Add</span>
             </Button>
             <div className="sticky-more-desktop">
-              {unlocked ? (
-                <Button variant="outline" type="button" onClick={lockBoard}>
-                  Sign out
-                </Button>
-              ) : null}
               {house ? (
-                <>
+                <div className="sticky-tool-group">
                   <IconButton
                     kind="heart"
                     on={house.hearted}
@@ -1674,20 +1727,36 @@ export default function Page() {
                     title={house.hearted ? "Hearted" : "Heart this house"}
                     onClick={(event) => toggleHeart(house, event)}
                   />
-                  <Button variant="outline" type="button" onClick={() => removeHouse(house)}>
-                    Delete
-                  </Button>
-                </>
+                  <IconButton
+                    kind="trash"
+                    label={`Delete ${house.name}`}
+                    title="Delete"
+                    onClick={() => removeHouse(house)}
+                  />
+                </div>
+              ) : null}
+              {unlocked ? (
+                <Button
+                  className="sticky-icon-action sticky-sign-out"
+                  variant="ghost"
+                  type="button"
+                  aria-label="Sign out"
+                  title="Sign out"
+                  onClick={lockBoard}
+                >
+                  <LogOut size={16} strokeWidth={1.75} />
+                  <span className="sticky-action-label">Sign out</span>
+                </Button>
               ) : null}
             </div>
             <Button
-              className="sticky-menu-btn"
-              variant="outline"
+              className="sticky-menu-btn sticky-icon-action"
+              variant="ghost"
               type="button"
               aria-label="Board menu"
               onClick={() => setBoardMenuOpen(true)}
             >
-              <MoreHorizontal size={18} strokeWidth={2} />
+              <MoreHorizontal size={18} strokeWidth={1.75} />
             </Button>
           </div>
         </div>
@@ -1846,10 +1915,10 @@ export default function Page() {
                     ) : null}
                   </div>
                   <div className="overview-sort-chips" aria-label="Sort houses">
-                    <SortTh label="Price" sortKey="price" sort={sort} onSort={toggleSort} />
-                    <SortTh label="Mo" sortKey="housing" sort={sort} onSort={toggleSort} />
-                    <SortTh label="Difference" sortKey="gap" sort={sort} onSort={toggleSort} />
-                    <SortTh
+                    <SortChip label="Price" sortKey="price" sort={sort} onSort={toggleSort} />
+                    <SortChip label="Mo" sortKey="housing" sort={sort} onSort={toggleSort} />
+                    <SortChip label="Difference" sortKey="gap" sort={sort} onSort={toggleSort} />
+                    <SortChip
                       label={commute?.name || "Drive"}
                       sortKey="drive"
                       sort={sort}
@@ -1907,7 +1976,7 @@ export default function Page() {
                             />
                             <ListingIcon href={item.url} />
                             <IconButton
-                              kind="close"
+                              kind="trash"
                               label={`Delete ${item.name}`}
                               title="Delete"
                               onClick={() => removeHouse(item)}
@@ -2010,7 +2079,7 @@ export default function Page() {
                                   />
                                   <ListingIcon href={item.url} />
                                   <IconButton
-                                    kind="close"
+                                    kind="trash"
                                     label={`Delete ${item.name}`}
                                     title="Delete"
                                     onClick={() => removeHouse(item)}
