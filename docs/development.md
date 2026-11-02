@@ -6,7 +6,11 @@ How this repo is run as a product you host. Product shape: [architecture.md](arc
 
 ```bash
 npm install
-cp .env.example .env.local   # then put the Neon URL in
+cp .env.example .env.local
+# Put YOUR Neon connection string in DATABASE_URL (own free project at console.neon.tech).
+# Never use someone else's production URL. Then:
+# SESSION_SECRET=$(openssl rand -hex 32)
+npm run db:setup
 npm run dev
 ```
 
@@ -14,9 +18,10 @@ npm run dev
 |---|---|
 | `npm run dev` | Next.js locally |
 | `npm run build` / `npm start` | Production server |
+| `npm run db:setup` | Apply [`db/schema.sql`](../db/schema.sql) to the `DATABASE_URL` in `.env.local` (greenfield Neon) |
 | `npm run lint` | ESLint (`eslint-config-next` 15 + TypeScript). The current UI has hook/`<img>` warnings; do not “fix” them in a drive-by. |
 | `npm run typecheck` | `tsc --noEmit` |
-| `npm test` | Vitest (`tests/**/*.test.ts`) |
+| `npm test` | Vitest (`tests/**/*.test.ts`) — no Neon required |
 | `npm run test:watch` | Vitest watch |
 | `npm run format` | Prettier write — **do not mass-format the existing app** unless that is the task |
 | `npm run format:check` | Prettier check |
@@ -57,3 +62,4 @@ App code is TypeScript (`app/page.tsx`, `lib/*.ts`). Shared domain types live in
 - New files are TypeScript. Do not add `.js` sources.
 - Format and lint **new** files. Do not prettier-bomb the demo UI unless asked. Do not strip `// @ts-nocheck` from `page.tsx` as busywork.
 - Env names belong in `.env.example`. Never commit `.env.local`.
+- Contributors bring their own Neon. Greenfield schema is [`db/schema.sql`](../db/schema.sql); numbered files under `db/migrations/` evolve existing databases. When you add DDL, update **both**.

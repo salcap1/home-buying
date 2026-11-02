@@ -18,14 +18,20 @@ This is one Next.js app on Vercel + Neon. Branding and market rules are data —
 
 ## Quick start
 
+Use **your own** free [Neon](https://console.neon.tech) project. This repo does not ship a shared database; do not reuse a maintainer or production `DATABASE_URL`.
+
 ```bash
 npm install
 cp .env.example .env.local
-# set DATABASE_URL (or HOME_BUYING_STORAGE_DATABASE_URL) and SESSION_SECRET
+# set DATABASE_URL to your Neon connection string
+# set SESSION_SECRET (e.g. openssl rand -hex 32)
+npm run db:setup   # applies db/schema.sql to your empty Neon
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Without signing in you get the empty UI. Sign in or create a workspace with a password.
+Open [http://localhost:3000](http://localhost:3000). Without signing in you get the empty UI. Create an account with a password to bootstrap a board.
+
+Unit tests (`npm test`) do not need Neon.
 
 ## Environment
 
@@ -33,11 +39,11 @@ Copy [`.env.example`](.env.example). Never commit `.env.local` or real Neon cred
 
 | Variable | Purpose |
 |---|---|
-| `DATABASE_URL` / `HOME_BUYING_STORAGE_DATABASE_URL` | Neon connection string |
+| `DATABASE_URL` / `HOME_BUYING_STORAGE_DATABASE_URL` | **Your** Neon connection string |
 | `DATABASE_PROVIDER` | `neon` (default) |
 | `SESSION_SECRET` | Signs unlock cookies (required for auth) |
 
-Apply SQL under [`db/migrations/`](db/migrations/) to your Neon database before first run of new features.
+Greenfield setup: [`db/schema.sql`](db/schema.sql) via `npm run db:setup`. Incremental history for existing databases: [`db/migrations/`](db/migrations/).
 
 ## Commands
 
@@ -67,7 +73,8 @@ See [`tests/README.md`](tests/README.md). UI (`app/page.tsx`) is intentionally n
 | `lib/auth/` | Password hashing + session cookies |
 | `lib/brand/` | Themes |
 | `lib/tenancy/` | Board session → store |
-| `db/migrations/` | Schema changes |
+| `db/schema.sql` | Empty greenfield schema (`npm run db:setup`) |
+| `db/migrations/` | Incremental schema history for existing DBs |
 | `tests/` | Vitest unit tests |
 | `docs/` | Architecture, flows, development notes |
 
@@ -77,7 +84,7 @@ Start with [`docs/codebase.md`](docs/codebase.md) and [`docs/architecture.md`](d
 
 **In git**
 
-- Application code, migrations (schema only — no live board seeds), public docs, `.env.example`
+- Application code, [`db/schema.sql`](db/schema.sql) (empty greenfield schema), migrations (incremental DDL — no live board seeds), public docs, `.env.example`
 
 **Not in git** (see `.gitignore`)
 

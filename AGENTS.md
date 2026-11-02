@@ -26,7 +26,7 @@ It is **not** an IDX search portal, a Zillow clone, or something that mounts ins
 - Branding is `lib/brand` (default theme). Do not hardcode a company look in `page.tsx`.
 - Vercel + Neon hosting.
 
-`npm run dev` / `npm run lint` / `npm run typecheck` / `npm test` / `npm run build`. Env: copy `.env.example` to `.env.local`. Node 22 (`.nvmrc`). New files are `.ts` / `.tsx`. Shared types: `lib/types.ts`. Platform folders: `lib/brand`, `lib/data`, `lib/tenancy`, `lib/auth`, `lib/providers`, `lib/layers`, `db/migrations`. Do not mass-run Prettier on the current app. Do not strip `// @ts-nocheck` from the demo UI as busywork.
+`npm run dev` / `npm run lint` / `npm run typecheck` / `npm test` / `npm run build`. Env: copy `.env.example` to `.env.local` with **your own** Neon `DATABASE_URL`, then `npm run db:setup`. Never use a maintainer production URL. Node 22 (`.nvmrc`). New files are `.ts` / `.tsx`. Shared types: `lib/types.ts`. Platform folders: `lib/brand`, `lib/data`, `lib/tenancy`, `lib/auth`, `lib/providers`, `lib/layers`, `db/migrations` (plus `db/schema.sql` for greenfield). Do not mass-run Prettier on the current app. Do not strip `// @ts-nocheck` from the demo UI as busywork.
 
 ## How to change things
 

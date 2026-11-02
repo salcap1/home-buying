@@ -16,6 +16,7 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "coverage:badge": "node .github/scripts/coverage-badge.mjs",
+    "db:setup": "node scripts/db-setup.mjs",
     "typecheck": "tsc --noEmit",
     "commitlint": "commitlint --edit",
     "prepare": "husky"
