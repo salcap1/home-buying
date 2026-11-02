@@ -268,12 +268,31 @@ export default function OverviewMap({
             iconAnchor: [34, 28],
           }),
         }).addTo(map);
-        marker.on("click", () => selectRef.current?.(pin.id));
+        marker.on("click", () => {
+          const coarse =
+            typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
+          if (coarse) {
+            if (cardIdRef.current === pin.id) {
+              selectRef.current?.(pin.id);
+              return;
+            }
+            setCardId(pin.id);
+            hoverRef.current?.(pin.id);
+            return;
+          }
+          selectRef.current?.(pin.id);
+        });
         marker.on("mouseover", () => {
+          if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
+            return;
+          }
           setCardId(pin.id);
           hoverRef.current?.(pin.id);
         });
         marker.on("mouseout", () => {
+          if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
+            return;
+          }
           setCardId("");
           hoverRef.current?.("");
         });
@@ -455,7 +474,17 @@ export default function OverviewMap({
           ? createPortal(
               <div
                 ref={hoverCardRef}
-                className="overview-hover"
+                role="button"
+                tabIndex={0}
+                className="overview-hover overview-hover-button"
+                aria-label={`Open listing`}
+                onClick={() => selectRef.current?.(cardPin.id)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    selectRef.current?.(cardPin.id);
+                  }
+                }}
                 dangerouslySetInnerHTML={{ __html: cardPin.html }}
               />,
               document.body

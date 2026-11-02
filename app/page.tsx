@@ -9,7 +9,7 @@ import {
   type HouseAnalysis,
 } from "@/lib/calc";
 import { addressKey, listingLabel, sameAddress, unavailableReason } from "@/lib/redfin-csv";
-import { ChevronDown, ChevronUp, ExternalLink, Heart, X } from "lucide-react";
+import { ChevronDown, ChevronUp, ExternalLink, Heart, MoreHorizontal, X } from "lucide-react";
 import { getBrand } from "@/lib/brand";
 import { money, moneyFine } from "@/lib/format";
 import type {
@@ -29,6 +29,13 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -145,6 +152,12 @@ function lotLabel(facts?: Facts | null) {
   if (facts?.lotAcres) return `${Number(facts.lotAcres)} ac`;
   if (facts?.lotSqft && facts.lotSqft >= 4000) return `${(facts.lotSqft / 43560).toFixed(2)} ac`;
   if (facts?.lotSqft) return `${Number(facts.lotSqft).toLocaleString()} sf`;
+  return "—";
+}
+
+function driveLabel(trip?: DriveTime | null) {
+  if (trip?.minutes != null) return `${trip.minutes}m`;
+  if (trip?.miles != null) return `${trip.miles}mi`;
   return "—";
 }
 
@@ -489,6 +502,8 @@ export default function Page() {
   const [importStatus, setImportStatus] = useState("");
   const [importAlert, setImportAlert] = useState(false);
   const [hoverId, setHoverId] = useState("");
+  const [boardMenuOpen, setBoardMenuOpen] = useState(false);
+  const [mapTall, setMapTall] = useState(false);
   const [districtsByBoard, setDistrictsByBoard] = useState<Record<string, SchoolDistrict[]>>({});
   const [boardMeta, setBoardMeta] = useState<{
     id: string;
@@ -1583,10 +1598,10 @@ export default function Page() {
             <small>{brand.tagline}</small>
             <strong>{brand.productName}</strong>
           </div>
-          {unlocked && boardMeta ? (
-            <div className="house-switcher">
+          <div className="sticky-controls">
+            {unlocked && boardMeta ? (
               <Input
-                className="search-tab-name"
+                className="search-tab-name sticky-board-name"
                 value={boardName}
                 aria-label="Board name"
                 onFocus={() => {
@@ -1606,9 +1621,7 @@ export default function Page() {
                   }
                 }}
               />
-            </div>
-          ) : null}
-          <div className="house-switcher">
+            ) : null}
             <Button
               className={`overview-btn${showingOverview ? " active" : ""}`}
               variant={showingOverview ? "secondary" : "outline"}
@@ -1623,7 +1636,7 @@ export default function Page() {
                 if (value) openHouse(value);
               }}
             >
-              <SelectTrigger className="min-w-[220px]" aria-label="Select a house">
+              <SelectTrigger className="house-select-trigger" aria-label="Select a house">
                 <SelectValue placeholder="Choose a house" />
               </SelectTrigger>
               <SelectContent>
@@ -1635,31 +1648,119 @@ export default function Page() {
                 ))}
               </SelectContent>
             </Select>
-            <Button variant="outline" type="button" onClick={addHouse} disabled={!unlocked}>
+            <Button
+              className="sticky-add"
+              variant="outline"
+              type="button"
+              onClick={addHouse}
+              disabled={!unlocked}
+            >
               + Add
             </Button>
-            {unlocked ? (
-              <Button variant="outline" type="button" onClick={lockBoard}>
-                Sign out
-              </Button>
-            ) : null}
-            {house ? (
-              <>
-                <IconButton
-                  kind="heart"
-                  on={house.hearted}
-                  label={house.hearted ? `Unheart ${house.name}` : `Heart ${house.name}`}
-                  title={house.hearted ? "Hearted" : "Heart this house"}
-                  onClick={(event) => toggleHeart(house, event)}
-                />
-                <Button variant="outline" type="button" onClick={() => removeHouse(house)}>
-                  Delete
+            <div className="sticky-more-desktop">
+              {unlocked ? (
+                <Button variant="outline" type="button" onClick={lockBoard}>
+                  Sign out
                 </Button>
-              </>
-            ) : null}
+              ) : null}
+              {house ? (
+                <>
+                  <IconButton
+                    kind="heart"
+                    on={house.hearted}
+                    label={house.hearted ? `Unheart ${house.name}` : `Heart ${house.name}`}
+                    title={house.hearted ? "Hearted" : "Heart this house"}
+                    onClick={(event) => toggleHeart(house, event)}
+                  />
+                  <Button variant="outline" type="button" onClick={() => removeHouse(house)}>
+                    Delete
+                  </Button>
+                </>
+              ) : null}
+            </div>
+            <Button
+              className="sticky-menu-btn"
+              variant="outline"
+              type="button"
+              aria-label="Board menu"
+              onClick={() => setBoardMenuOpen(true)}
+            >
+              <MoreHorizontal size={18} strokeWidth={2} />
+            </Button>
           </div>
         </div>
       </div>
+
+      <Dialog open={boardMenuOpen} onOpenChange={setBoardMenuOpen}>
+        <DialogContent className="board-menu-dialog" showCloseButton>
+          <DialogHeader>
+            <DialogTitle>Board menu</DialogTitle>
+            <DialogDescription>Rename the board or manage this search.</DialogDescription>
+          </DialogHeader>
+          <div className="board-menu">
+            {unlocked && boardMeta ? (
+              <div className="board-menu-field">
+                <Label htmlFor="board-menu-name">Board name</Label>
+                <Input
+                  id="board-menu-name"
+                  value={boardName}
+                  onChange={(event) => setBoardName(event.target.value)}
+                  onBlur={() => renameBoard(boardName)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter") event.currentTarget.blur();
+                  }}
+                />
+              </div>
+            ) : null}
+            <Button
+              variant="outline"
+              type="button"
+              disabled={!unlocked}
+              onClick={() => {
+                addHouse();
+                setBoardMenuOpen(false);
+              }}
+            >
+              + Add house
+            </Button>
+            {house ? (
+              <div className="board-menu-row">
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={(event) => {
+                    toggleHeart(house, event);
+                  }}
+                >
+                  {house.hearted ? "Unheart" : "Heart"} this house
+                </Button>
+                <Button
+                  variant="outline"
+                  type="button"
+                  onClick={() => {
+                    removeHouse(house);
+                    setBoardMenuOpen(false);
+                  }}
+                >
+                  Delete house
+                </Button>
+              </div>
+            ) : null}
+            {unlocked ? (
+              <Button
+                variant="outline"
+                type="button"
+                onClick={() => {
+                  lockBoard();
+                  setBoardMenuOpen(false);
+                }}
+              >
+                Sign out
+              </Button>
+            ) : null}
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {showingOverview ? (
         <section className="wrap">
@@ -1675,10 +1776,15 @@ export default function Page() {
           <div className="section-head">
             <div>
               <h2>All houses · {overviewRows.length}</h2>
-              <p>
+              <p className="section-copy-desktop">
                 {!unlocked
                   ? "The board is open with no workspace loaded. Sign in or create a password-only account to save searches."
                   : "Click a column to sort. Import a Redfin CSV. Already-deleted and off-market listings are called out and not added."}
+              </p>
+              <p className="section-copy-mobile">
+                {!unlocked
+                  ? "Sign in or create an account to save this board."
+                  : "Tap a house to open it. Use sort chips to reorder."}
               </p>
             </div>
             <div className="section-actions">
@@ -1727,7 +1833,81 @@ export default function Page() {
                       </p>
                     ) : null}
                   </div>
-                  <div className="overview-scroll">
+                  <div className="overview-sort-chips" aria-label="Sort houses">
+                    <SortTh label="Price" sortKey="price" sort={sort} onSort={toggleSort} />
+                    <SortTh label="Mo" sortKey="housing" sort={sort} onSort={toggleSort} />
+                    <SortTh label="Difference" sortKey="gap" sort={sort} onSort={toggleSort} />
+                    <SortTh
+                      label={commute?.name || "Drive"}
+                      sortKey="drive"
+                      sort={sort}
+                      onSort={toggleSort}
+                    />
+                  </div>
+                  <div className="overview-cards">
+                    {visibleRows.length ? (
+                      visibleRows.map(({ house: item, analysis: row }) => (
+                        <article
+                          key={item.id}
+                          className={`overview-card-item${hoverId === item.id ? " is-hover" : ""}${item.hearted ? " is-hearted" : ""}${item.notes?.trim() ? " has-note" : ""}`}
+                        >
+                          <button
+                            type="button"
+                            className="overview-card-main"
+                            onClick={() => openHouse(item.id)}
+                          >
+                            <div className="overview-card-media">
+                              {item.photo ? (
+                                <img src={item.photo} alt="" />
+                              ) : (
+                                <div className="overview-card-photo-empty" />
+                              )}
+                            </div>
+                            <div className="overview-card-body">
+                              <div className="overview-card-top">
+                                <strong title={item.name}>
+                                  {shortName(item.name) || "New listing"}
+                                </strong>
+                                <Badge variant={row.gap < 0 ? "destructive" : "secondary"}>
+                                  {money(row.gap)}
+                                </Badge>
+                              </div>
+                              <div className="overview-card-meta">
+                                <span>{item.price ? money(item.price) : "—"}</span>
+                                <span>
+                                  {item.facts?.beds || "—"} / {item.facts?.baths || "—"}
+                                </span>
+                                <span>{money(row.housing)}/mo</span>
+                                <span>{driveLabel(driveTimes[item.id])}</span>
+                              </div>
+                              {item.facts?.community ? (
+                                <span className="overview-community">{item.facts.community}</span>
+                              ) : null}
+                            </div>
+                          </button>
+                          <div className="overview-actions">
+                            <IconButton
+                              kind="heart"
+                              on={item.hearted}
+                              label={item.hearted ? `Unheart ${item.name}` : `Heart ${item.name}`}
+                              title={item.hearted ? "Hearted" : "Heart this house"}
+                              onClick={(event) => toggleHeart(item, event)}
+                            />
+                            <ListingIcon href={item.url} />
+                            <IconButton
+                              kind="close"
+                              label={`Delete ${item.name}`}
+                              title="Delete"
+                              onClick={() => removeHouse(item)}
+                            />
+                          </div>
+                        </article>
+                      ))
+                    ) : (
+                      <p className="note">No streets match.</p>
+                    )}
+                  </div>
+                  <div className="overview-scroll overview-desktop">
                     {visibleRows.length ? (
                       <Table className="overview">
                         <TableHeader>
@@ -1801,13 +1981,7 @@ export default function Page() {
                               >
                                 {schoolMarks(item.schools)}
                               </TableCell>
-                              <TableCell>
-                                {driveTimes[item.id]?.minutes != null
-                                  ? `${driveTimes[item.id].minutes}m`
-                                  : driveTimes[item.id]?.miles != null
-                                    ? `${driveTimes[item.id].miles}mi`
-                                    : "—"}
-                              </TableCell>
+                              <TableCell>{driveLabel(driveTimes[item.id])}</TableCell>
                               <TableCell>
                                 <div
                                   className="overview-actions"
@@ -1844,10 +2018,18 @@ export default function Page() {
                 <p className="note">Add a house to start comparing.</p>
               )}
             </Card>
-            <div className="overview-map-row">
-              <Card className="map-card overview-map-card">
-                <CardHeader>
+            <div className={`overview-map-row${mapTall ? " is-tall" : ""}`}>
+              <Card className={`map-card overview-map-card${mapTall ? " is-tall" : ""}`}>
+                <CardHeader className="overview-map-head">
                   <CardTitle>Map</CardTitle>
+                  <Button
+                    className="map-size-toggle"
+                    variant="outline"
+                    type="button"
+                    onClick={() => setMapTall((current) => !current)}
+                  >
+                    {mapTall ? "Compact map" : "Expand map"}
+                  </Button>
                 </CardHeader>
                 <CardContent className="map-stage">
                   {unlocked && mapViews[boardId] ? (

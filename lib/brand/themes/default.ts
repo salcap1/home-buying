@@ -4,9 +4,9 @@ import { defaultScale, type BrandTheme } from "../theme";
 /** Default product look. Other companies get their own file in this folder. */
 export const defaultTheme: BrandTheme = {
   id: "default",
-  name: "Buyer boards",
-  productName: "Home buying",
-  tagline: "House by house",
+  name: "Buyer Boards",
+  productName: "Buyer Boards",
+  tagline: "Your home, your way",
   ...defaultScale,
   modules: [...MODULE_IDS],
   fonts: {
