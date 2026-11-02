@@ -39,79 +39,81 @@ export function AuthPanel({ brandName, tagline, busy, error, onSubmit }: AuthPan
 
   return (
     <div className="auth-panel">
-      <div className="auth-panel-card">
+      <header className="auth-brand">
         <p className="auth-kicker">{tagline}</p>
-        <h2 className="auth-title">{brandName}</h2>
-        <p className="auth-copy">
-          {mode === "sign_in"
-            ? "Enter your password to load this board. The empty shell stays visible either way."
-            : "Create an account with a password only — no email, no username. One password is one board."}
-        </p>
+        <h1 className="auth-title">{brandName}</h1>
+      </header>
 
-        <div className="auth-tabs" role="tablist" aria-label="Account">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={mode === "sign_in"}
-            className={mode === "sign_in" ? "is-active" : undefined}
-            onClick={() => {
-              setMode("sign_in");
-              setLocalError("");
-            }}
-          >
-            Sign in
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={mode === "create"}
-            className={mode === "create" ? "is-active" : undefined}
-            onClick={() => {
-              setMode("create");
-              setLocalError("");
-            }}
-          >
-            Create account
-          </button>
+      <p className="auth-copy">
+        {mode === "sign_in"
+          ? "Enter your password to open your board."
+          : "One password, one board — no email or username."}
+      </p>
+
+      <div className="auth-tabs" role="tablist" aria-label="Account">
+        <button
+          type="button"
+          role="tab"
+          aria-selected={mode === "sign_in"}
+          className={mode === "sign_in" ? "is-active" : undefined}
+          onClick={() => {
+            setMode("sign_in");
+            setLocalError("");
+          }}
+        >
+          Sign in
+        </button>
+        <button
+          type="button"
+          role="tab"
+          aria-selected={mode === "create"}
+          className={mode === "create" ? "is-active" : undefined}
+          onClick={() => {
+            setMode("create");
+            setLocalError("");
+          }}
+        >
+          Create account
+        </button>
+      </div>
+
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <div className="auth-field">
+          <Label htmlFor="workspace-password">Password</Label>
+          <Input
+            id="workspace-password"
+            type="password"
+            autoComplete={mode === "create" ? "new-password" : "current-password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            disabled={busy}
+            required
+            placeholder={mode === "create" ? "At least 8 characters" : undefined}
+          />
         </div>
-
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <div className="field">
-            <Label htmlFor="workspace-password">Password</Label>
+        {mode === "create" ? (
+          <div className="auth-field">
+            <Label htmlFor="workspace-password-confirm">Confirm password</Label>
             <Input
-              id="workspace-password"
+              id="workspace-password-confirm"
               type="password"
-              autoComplete={mode === "create" ? "new-password" : "current-password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="new-password"
+              value={confirm}
+              onChange={(e) => setConfirm(e.target.value)}
               disabled={busy}
               required
             />
           </div>
-          {mode === "create" ? (
-            <div className="field">
-              <Label htmlFor="workspace-password-confirm">Confirm password</Label>
-              <Input
-                id="workspace-password-confirm"
-                type="password"
-                autoComplete="new-password"
-                value={confirm}
-                onChange={(e) => setConfirm(e.target.value)}
-                disabled={busy}
-                required
-              />
-            </div>
-          ) : null}
-          {localError || error ? (
-            <p className="auth-error" role="alert">
-              {localError || error}
-            </p>
-          ) : null}
-          <Button type="submit" className="auth-submit" disabled={busy || !password}>
-            {busy ? "Working…" : mode === "create" ? "Create account" : "Sign in"}
-          </Button>
-        </form>
-      </div>
+        ) : null}
+        {localError || error ? (
+          <p className="auth-error" role="alert">
+            {localError || error}
+          </p>
+        ) : null}
+        <Button type="submit" className="auth-submit" disabled={busy || !password}>
+          {busy ? "Working…" : mode === "create" ? "Create account" : "Sign in"}
+        </Button>
+      </form>
     </div>
   );
 }

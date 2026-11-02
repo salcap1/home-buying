@@ -60,7 +60,7 @@ District and county geometry is shared across boards. The per-board choice is wh
 
 ## Auth
 
-Each account has a unique password (`access_keys.password_hash`) and exactly one board. `POST /api/session` with `mode: "sign_in" | "create"` unlocks or creates that board. Locked visitors still see the empty board UI. Share links are still future; see architecture phase 4.
+Each account has a unique password (`access_keys.password_hash`) and exactly one board. `POST /api/session` with `mode: "sign_in" | "create"` unlocks or creates that board. Locked visitors see a splash gate only. Share links are still future; see architecture phase 4.
 
 Listing refresh (`/api/houses/refresh`) requires a signed-in board session.
 

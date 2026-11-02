@@ -1626,7 +1626,36 @@ export default function Page() {
     } else setBoardName(boardMeta.name);
   }
 
-  if (!sessionReady || unlocked == null || !assumptions || !sale || (house && !analysis)) {
+  if (!sessionReady || unlocked == null) {
+    return (
+      <main className="boot-screen" aria-busy="true" aria-live="polite">
+        <div className="boot-panel">
+          <p className="boot-kicker">{brand.tagline}</p>
+          <h1 className="boot-title">{brand.productName}</h1>
+          <div className="boot-track" aria-hidden="true">
+            <span className="boot-bar" />
+          </div>
+          <p className="boot-caption">Opening your board</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (!unlocked) {
+    return (
+      <main className="auth-splash">
+        <AuthPanel
+          brandName={brand.productName}
+          tagline={brand.tagline}
+          busy={unlockBusy}
+          error={unlockError}
+          onSubmit={authenticate}
+        />
+      </main>
+    );
+  }
+
+  if (!assumptions || !sale || (house && !analysis)) {
     return (
       <main className="boot-screen" aria-busy="true" aria-live="polite">
         <div className="boot-panel">
@@ -1845,47 +1874,26 @@ export default function Page() {
 
       {showingOverview ? (
         <section className="wrap">
-          {!unlocked ? (
-            <AuthPanel
-              brandName={brand.productName}
-              tagline={brand.tagline}
-              busy={unlockBusy}
-              error={unlockError}
-              onSubmit={authenticate}
-            />
-          ) : null}
           <div className="section-head">
             <div>
               <h2>All houses · {overviewRows.length}</h2>
               <p className="section-copy-desktop">
-                {!unlocked
-                  ? "The board is open with no workspace loaded. Sign in or create a password-only account to save searches."
-                  : "Click a column to sort. Import a Redfin CSV. Already-deleted and off-market listings are called out and not added."}
+                Click a column to sort. Import a Redfin CSV. Already-deleted and off-market listings are called out and not added.
               </p>
-              <p className="section-copy-mobile">
-                {!unlocked
-                  ? "Sign in or create an account to save this board."
-                  : "Tap a house to open it. Use sort chips to reorder."}
-              </p>
+              <p className="section-copy-mobile">Tap a house to open it. Use sort chips to reorder.</p>
             </div>
             <div className="section-actions">
-              {unlocked ? (
-                <Button variant="outline" className="import-btn" asChild>
-                  <label>
-                    Import Redfin CSV
-                    <input
-                      ref={importBox}
-                      type="file"
-                      accept=".csv,text/csv"
-                      onChange={(e) => importCsv(e.target.files?.[0])}
-                    />
-                  </label>
-                </Button>
-              ) : (
-                <Button variant="outline" className="import-btn" type="button" disabled>
+              <Button variant="outline" className="import-btn" asChild>
+                <label>
                   Import Redfin CSV
-                </Button>
-              )}
+                  <input
+                    ref={importBox}
+                    type="file"
+                    accept=".csv,text/csv"
+                    onChange={(e) => importCsv(e.target.files?.[0])}
+                  />
+                </label>
+              </Button>
               {importStatus ? (
                 <p
                   className={importAlert ? "import-alert" : "note"}
@@ -2113,7 +2121,7 @@ export default function Page() {
                   </Button>
                 </CardHeader>
                 <CardContent className="map-stage">
-                  {unlocked && mapViews[boardId] ? (
+                  {mapViews[boardId] ? (
                     <div className="overview-map-slot is-active">
                       <OverviewMap
                         active
@@ -2126,12 +2134,9 @@ export default function Page() {
                         onHover={(id) => setHoverId(id || "")}
                       />
                     </div>
-                  ) : null}
-                  {!unlocked ? (
-                    <div className="map-empty">Sign in to load map pins for a search.</div>
-                  ) : !mapViews[boardId] ? (
+                  ) : (
                     <div className="map-empty">Loading this search…</div>
-                  ) : null}
+                  )}
                 </CardContent>
               </Card>
             </div>

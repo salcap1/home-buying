@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 ![Node](https://img.shields.io/badge/node-22-brightgreen)
 
-A hosted **buyer board** for real-estate shortlists: payments, commute, schools, and map context. Agents (or households) keep private searches behind a password; visitors can still open the app and see the empty board shell.
+A hosted **buyer board** for real-estate shortlists: payments, commute, schools, and map context. Agents (or households) keep private searches behind a password; visitors see a sign-in splash until they unlock a board.
 
 This is one Next.js app on Vercel + Neon. Branding and market rules are data — not forks.
 
@@ -29,7 +29,7 @@ npm run db:setup   # applies db/schema.sql to your empty Neon
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Without signing in you get the empty UI. Create an account with a password to bootstrap a board.
+Open [http://localhost:3000](http://localhost:3000). Without signing in you get a splash to sign in or create an account.
 
 Unit tests (`npm test`) do not need Neon.
 

@@ -8,7 +8,7 @@ How the board screen moves data today. File ownership is [codebase.md](codebase.
 
 `GET /api/session` (`app/api/session/route.ts`).
 
-- Without a signed unlock cookie the response is `{ unlocked: false }`. The board UI still renders empty; the overview shows sign-in / create-account.
+- Without a signed unlock cookie the response is `{ unlocked: false }`. The app shows a sign-in / create-account splash and does not render the board.
 - `POST /api/session` with `{ password, mode: "sign_in" | "create" }` unlocks or creates one board (password only; unique among accounts).
 - Then `GET /api/assumptions` and `GET /api/houses` for that board. `PATCH` renames it. `DELETE /api/session` signs out.
 
